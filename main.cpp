@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 
+#include "httplib.h"
+
 std::string get_help_text()
 {
     return R""""(
@@ -44,6 +46,14 @@ JSON output with the following keys
 void print_help()
 {
     std::cout << get_help_text();
+}
+
+std::string get_movie_details(const std::string &movie_name)
+{
+    httplib::Client cli("https://example.com");
+
+    auto res = cli.Get("/");
+    return std::string(res->body);
 }
 
 int main(int argc, char **argv)
@@ -97,6 +107,10 @@ int main(int argc, char **argv)
     {
         std::cout << "No movie name supplied. Pass -h, --help to get help" << std::endl;
     }
+
+    auto movie_details = get_movie_details(movie_name);
+
+    std::cout << movie_details << std::endl;
 
     return 0;
 }
